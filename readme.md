@@ -1,5 +1,6 @@
 # Leeloo LXP MY Courses Block
 
+This block show all the enrolled courses of users, And the view settings will be managed from Leeloo LXP
 Installation Instructions
 =========================
 
