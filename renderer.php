@@ -43,6 +43,17 @@ class block_tb_my_courses_renderer extends plugin_renderer_base {
         global $CFG, $DB;
         $html = '';
         // LearningWorks.
+
+        if($config->mycourse_showasslider == 1){
+            $this->page->requires->js(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/js/jquery.min.js'));
+            $this->page->requires->js(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/js/owl.carousel.js'));
+            $this->page->requires->js(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/js/owlslider.js'));
+
+            $this->page->requires->css(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/css/owl.carousel.min.css'));
+            $this->page->requires->css(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/css/owl.theme.default.min.css'));
+
+        }
+
         $this->page->requires->js(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/js/custom.js'));
         $role = $DB->get_record('role', array('shortname' => 'editingteacher'));
         $ismovingcourse = false;
@@ -107,8 +118,12 @@ class block_tb_my_courses_renderer extends plugin_renderer_base {
             $startvalue = 12;
             $courseclass = "list";
         } else {
-            $html .= html_writer::tag('a', 'Change View', array('href' => '#', 'id' => 'box-or-lines',
+            if($config->mycourse_showasslider == 1){    
+                $html .= '';
+            }else{
+                $html .= html_writer::tag('a', 'Change View', array('href' => '#', 'id' => 'box-or-lines',
                 'styles' => '', 'class' => "$courseclass col-md-$startvalue span$startvalue $courseclass"));
+            }
         }
         $html .= html_writer::tag('div', '', array("class" => "hidden startgrid $courseclass", "grid-size" => $gridsplit));
         $html .= html_writer::div('', 'box flush');
@@ -120,7 +135,11 @@ class block_tb_my_courses_renderer extends plugin_renderer_base {
             'u.lang, u.timezone, u.lastaccess, u.mnethostid, u.imagealt, r.name AS rolename, r.sortorder, ' .
             'r.shortname AS roleshortname, rn.name AS rolecoursealias';
 
-        $html .= html_writer::start_div('tb_my_courses_list');
+        if($config->mycourse_showasslider == 1){    
+            $html .= html_writer::start_div('tb_my_courses_list owl-carousel owl-theme');
+        }else{
+            $html .= html_writer::start_div('tb_my_courses_list');
+        }
         foreach ($courses as $key => $course) {
             $percent = block_tb_my_courses_progress_percent($course);
 
