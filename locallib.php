@@ -351,3 +351,40 @@ function block_tb_my_courses_progress_percent($course) {
     }
     return $percentage;
 }
+
+/**
+ * Fetch and Update Configration From L
+ */
+function updateconfmy_courses(){
+    $leeloolxplicense = get_config('block_tb_my_courses')->license;
+    
+    $url = 'https://leeloolxp.com/api_moodle.php/?action=page_info';
+    $postdata = '&license_key=' . $leeloolxplicense;
+    $curl = new curl;
+    $options = array(
+        'CURLOPT_RETURNTRANSFER' => true,
+        'CURLOPT_HEADER' => false,
+        'CURLOPT_POST' => 1,
+    );
+    if (!$output = $curl->post($url, $postdata, $options)) {
+        
+    }
+    $infoleeloolxp = json_decode($output);
+    if ($infoleeloolxp->status != 'false') {
+        $leeloolxpurl = $infoleeloolxp->data->install_url;
+    } else {
+        
+    }
+    $url = $leeloolxpurl . '/admin/Theme_setup/get_mycourse_courses';
+    $postdata = '&license_key=' . $leeloolxplicense;
+    $curl = new curl;
+    $options = array(
+        'CURLOPT_RETURNTRANSFER' => true,
+        'CURLOPT_HEADER' => false,
+        'CURLOPT_POST' => 1,
+    );
+    if (!$output = $curl->post($url, $postdata, $options)) {
+        
+    }
+    set_config('settingsjson', base64_encode($output), 'block_tb_my_courses');
+}

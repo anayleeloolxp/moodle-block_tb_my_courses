@@ -25,10 +25,18 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-    $settings->add(new admin_setting_configtext(
+
+    require_once($CFG->dirroot . '/blocks/tb_my_courses/lib.php');
+
+    $setting = new admin_setting_configtext(
         'block_tb_my_courses/license',
         get_string('license', 'block_tb_my_courses'),
         get_string('license', 'block_tb_my_courses'),
         0
-    ));
+    );
+    $setting->set_updatedcallback(updateconfmy_courses());
+    $settings->add($setting);
+
+    $setting = new admin_setting_configmy_courses('block_tb_my_courses/settingsjson', '', '', '', PARAM_RAW);
+    $settings->add($setting);
 }
