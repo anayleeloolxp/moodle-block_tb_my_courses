@@ -1,62 +1,71 @@
-M.block_tb_my_courses = {}
+M.block_tb_my_courses = {};
 
-M.block_tb_my_courses.add_handles = function(Y) {
+M.block_tb_my_courses.add_handles = function (Y) {
     M.block_tb_my_courses.Y = Y;
     var MOVEICON = {
         pix: "i/move_2d",
-        component: 'moodle'
+        component: "moodle",
     };
 
-    YUI().use('dd-constrain', 'dd-proxy', 'dd-drop', 'dd-plugin', function(Y) {
+    YUI().use("dd-constrain", "dd-proxy", "dd-drop", "dd-plugin", function (Y) {
         // Static Vars.
-        var goingUp = false, lastY = 0;
+        var goingUp = false,
+            lastY = 0;
 
-        var list = Y.Node.all('.tb_my_courses_list .coursebox');
-        list.each(function(v, k) {
+        var list = Y.Node.all(".tb_my_courses_list .coursebox");
+        list.each(function (v, k) {
             // Replace move link and image with move_2d image.
-            var imagenode = v.one('.course_title .move a img');
-            imagenode.setAttribute('src', M.util.image_url(MOVEICON.pix, MOVEICON.component));
-            imagenode.addClass('cursor');
-            v.one('.course_title .move a').replace(imagenode);
+            var imagenode = v.one(".course_title .move a img");
+            imagenode.setAttribute(
+                "src",
+                M.util.image_url(MOVEICON.pix, MOVEICON.component)
+            );
+            imagenode.addClass("cursor");
+            v.one(".course_title .move a").replace(imagenode);
 
             var dd = new Y.DD.Drag({
                 node: v,
                 target: {
-                    padding: '0 0 0 20'
-                }
-            }).plug(Y.Plugin.DDProxy, {
-                moveOnEnd: false
-            }).plug(Y.Plugin.DDConstrained, {
-                constrain2node: '.tb_my_courses_list'
-            });
-            dd.addHandle('.course_title .move');
+                    padding: "0 0 0 20",
+                },
+            })
+                .plug(Y.Plugin.DDProxy, {
+                    moveOnEnd: false,
+                })
+                .plug(Y.Plugin.DDConstrained, {
+                    constrain2node: ".tb_my_courses_list",
+                });
+            dd.addHandle(".course_title .move");
         });
 
-        Y.DD.DDM.on('drag:start', function(e) {
+        Y.DD.DDM.on("drag:start", function (e) {
             // Get our drag object.
             var drag = e.target;
             // Set some styles here.
-            drag.get('node').setStyle('opacity', '.25');
-            drag.get('dragNode').addClass('block_tb_my_courses');
-            drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
-            drag.get('dragNode').setStyles({
-                opacity: '.5',
-                borderColor: drag.get('node').getStyle('borderColor'),
-                backgroundColor: drag.get('node').getStyle('backgroundColor')
+            drag.get("node").setStyle("opacity", ".25");
+            drag.get("dragNode").addClass("block_tb_my_courses");
+            drag.get("dragNode").set(
+                "innerHTML",
+                drag.get("node").get("innerHTML")
+            );
+            drag.get("dragNode").setStyles({
+                opacity: ".5",
+                borderColor: drag.get("node").getStyle("borderColor"),
+                backgroundColor: drag.get("node").getStyle("backgroundColor"),
             });
         });
 
-        Y.DD.DDM.on('drag:end', function(e) {
+        Y.DD.DDM.on("drag:end", function (e) {
             var drag = e.target;
             // Put our styles back.
-            drag.get('node').setStyles({
-                visibility: '',
-                opacity: '1'
+            drag.get("node").setStyles({
+                visibility: "",
+                opacity: "1",
             });
             M.block_tb_my_courses.save(Y);
         });
 
-        Y.DD.DDM.on('drag:drag', function(e) {
+        Y.DD.DDM.on("drag:drag", function (e) {
             // Get the last y point.
             var y = e.target.lastXY[1];
             // Is it greater than the lastY var?
@@ -71,54 +80,56 @@ M.block_tb_my_courses.add_handles = function(Y) {
             lastY = y;
         });
 
-        Y.DD.DDM.on('drop:over', function(e) {
+        Y.DD.DDM.on("drop:over", function (e) {
             // Get a reference to our drag and drop nodes.
-            var drag = e.drag.get('node'),
-                drop = e.drop.get('node');
+            var drag = e.drag.get("node"),
+                drop = e.drop.get("node");
 
             // Are we dropping on a li node?
-            if (drop.hasClass('coursebox')) {
+            if (drop.hasClass("coursebox")) {
                 // Are we not going up?
                 if (!goingUp) {
-                    drop = drop.get('nextSibling');
+                    drop = drop.get("nextSibling");
                 }
                 // Add the node to this list.
-                e.drop.get('node').get('parentNode').insertBefore(drag, drop);
+                e.drop.get("node").get("parentNode").insertBefore(drag, drop);
                 // Resize this nodes shim, so we can drop on it later.
                 e.drop.sizeShim();
             }
         });
 
-        Y.DD.DDM.on('drag:drophit', function(e) {
-            var drop = e.drop.get('node'),
-                drag = e.drag.get('node');
+        Y.DD.DDM.on("drag:drophit", function (e) {
+            var drop = e.drop.get("node"),
+                drag = e.drag.get("node");
 
             // If we are not on an li, we must have been dropped on a ul.
-            if (!drop.hasClass('coursebox')) {
+            if (!drop.hasClass("coursebox")) {
                 if (!drop.contains(drag)) {
                     drop.appendChild(drag);
                 }
             }
         });
     });
-}
+};
 
-M.block_tb_my_courses.save = function() {
+M.block_tb_my_courses.save = function () {
     var Y = M.block_tb_my_courses.Y;
-    var sortorder = Y.one('.tb_my_courses_list').get('children').getAttribute('id');
+    var sortorder = Y.one(".tb_my_courses_list")
+        .get("children")
+        .getAttribute("id");
     for (var i = 0; i < sortorder.length; i++) {
         sortorder[i] = sortorder[i].substring(7);
     }
     var params = {
-        sesskey : M.cfg.sesskey,
-        sortorder : sortorder
+        sesskey: M.cfg.sesskey,
+        sortorder: sortorder,
     };
-    Y.io(M.cfg.wwwroot + '/blocks/tb_my_courses/save.php', {
-        method: 'POST',
+    Y.io(M.cfg.wwwroot + "/blocks/tb_my_courses/save.php", {
+        method: "POST",
         data: build_querystring(params),
-        context: this
+        context: this,
     });
-}
+};
 
 /**
  * Init a collapsible region, see print_collapsible_region in weblib.php
@@ -127,12 +138,17 @@ M.block_tb_my_courses.save = function() {
  * @param {String} userpref the user preference that records the state of this box. false if none.
  * @param {String} strtooltip
  */
-M.block_tb_my_courses.collapsible = function(Y, id, userpref, strtooltip) {
+M.block_tb_my_courses.collapsible = function (Y, id, userpref, strtooltip) {
     if (userpref) {
         M.block_tb_my_courses.userpref = true;
     }
-    Y.use('anim', function(Y) {
-        new M.block_tb_my_courses.CollapsibleRegion(Y, id, userpref, strtooltip);
+    Y.use("anim", function (Y) {
+        new M.block_tb_my_courses.CollapsibleRegion(
+            Y,
+            id,
+            userpref,
+            strtooltip
+        );
     });
 };
 
@@ -146,33 +162,38 @@ M.block_tb_my_courses.collapsible = function(Y, id, userpref, strtooltip) {
  * @param {String} userpref The user preference that records the state of this box. false if none.
  * @param {String} strtooltip
  */
-M.block_tb_my_courses.CollapsibleRegion = function(Y, id, userpref, strtooltip) {
+M.block_tb_my_courses.CollapsibleRegion = function (
+    Y,
+    id,
+    userpref,
+    strtooltip
+) {
     // Record the pref name.
     this.userpref = userpref;
 
     // Find the divs in the document.
-    this.div = Y.one('#' + id);
+    this.div = Y.one("#" + id);
 
     // Get the caption for the collapsible region.
-    var caption = this.div.one('#' + id + '_caption');
-    caption.setAttribute('title', strtooltip);
+    var caption = this.div.one("#" + id + "_caption");
+    caption.setAttribute("title", strtooltip);
 
     // Create a link.
     var a = Y.Node.create('<a href="#"></a>');
     // Create a local scoped lamba function to move nodes to a new link.
-    var movenode = function(node){
+    var movenode = function (node) {
         node.remove();
         a.append(node);
     };
     // Apply the lamba function on each of the captions child nodes.
-    caption.get('children').each(movenode, this);
+    caption.get("children").each(movenode, this);
     caption.prepend(a);
 
     // Get the height of the div at this point before we shrink it if required.
-    var height = this.div.get('offsetHeight');
-    if (this.div.hasClass('collapsed')) {
+    var height = this.div.get("offsetHeight");
+    if (this.div.hasClass("collapsed")) {
         // Shrink the div as it is collapsed by default.
-        this.div.setStyle('height', caption.get('offsetHeight') + 'px');
+        this.div.setStyle("height", caption.get("offsetHeight") + "px");
     }
 
     // Create the animation.
@@ -180,29 +201,41 @@ M.block_tb_my_courses.CollapsibleRegion = function(Y, id, userpref, strtooltip) 
         node: this.div,
         duration: 0.3,
         easing: Y.Easing.easeBoth,
-        to: {height:caption.get('offsetHeight')},
-        from: {height:height}
+        to: { height: caption.get("offsetHeight") },
+        from: { height: height },
     });
 
     // Handler for the animation finishing.
-    animation.on('end', function() {
-        this.div.toggleClass('collapsed');
-    }, this);
+    animation.on(
+        "end",
+        function () {
+            this.div.toggleClass("collapsed");
+        },
+        this
+    );
 
     // Hook up the event handler.
-    caption.on('click', function(e, animation) {
-        e.preventDefault();
-        // Animate to the appropriate size.
-        if (animation.get('running')) {
-            animation.stop();
-        }
-        animation.set('reverse', this.div.hasClass('collapsed'));
-        // Update the user preference.
-        if (this.userpref) {
-            M.util.set_user_preference(this.userpref, !this.div.hasClass('collapsed'));
-        }
-        animation.run();
-    }, this, animation);
+    caption.on(
+        "click",
+        function (e, animation) {
+            e.preventDefault();
+            // Animate to the appropriate size.
+            if (animation.get("running")) {
+                animation.stop();
+            }
+            animation.set("reverse", this.div.hasClass("collapsed"));
+            // Update the user preference.
+            if (this.userpref) {
+                M.util.set_user_preference(
+                    this.userpref,
+                    !this.div.hasClass("collapsed")
+                );
+            }
+            animation.run();
+        },
+        this,
+        animation
+    );
 };
 
 M.block_tb_my_courses.userpref = false;
