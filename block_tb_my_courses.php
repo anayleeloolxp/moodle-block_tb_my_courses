@@ -58,13 +58,13 @@ class block_tb_my_courses extends block_base {
      */
     public function get_content() {
         global $USER, $CFG;
-        require_once ($CFG->dirroot . '/user/profile/lib.php');
+        require_once($CFG->dirroot . '/user/profile/lib.php');
 
         if ($this->content !== null) {
             return $this->content;
         }
 
-        require_once ($CFG->libdir . '/filelib.php');
+        require_once($CFG->libdir . '/filelib.php');
 
         $leeloolxplicense = get_config('block_tb_my_courses')->license;
         $settingsjson = get_config('block_tb_my_courses')->settingsjson;
@@ -96,7 +96,7 @@ class block_tb_my_courses extends block_base {
 
         $renderer = $this->page->get_renderer('block_tb_my_courses');
         if (!empty($config->mycourse_showwelcomearea)) {
-            require_once ($CFG->dirroot . '/message/lib.php');
+            require_once($CFG->dirroot . '/message/lib.php');
             $msgcount = message_count_unread_messages();
             $this->content->text = $renderer->welcome_area($msgcount);
         }
@@ -144,7 +144,7 @@ class block_tb_my_courses extends block_base {
      * Get settings from Leeloo
      */
     public function cron() {
-        require_once ($CFG->dirroot . '/blocks/tb_my_courses/lib.php');
+        require_once($CFG->dirroot . '/blocks/tb_my_courses/lib.php');
         updateconfmy_courses();
     }
 }
