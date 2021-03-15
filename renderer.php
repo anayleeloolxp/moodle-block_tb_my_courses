@@ -27,7 +27,7 @@ require_once($CFG->libdir . '/externallib.php');
 /**
  * tb_my_courses block rendrer
  *
- * @copyright  2012 Adam Olley <adam.olley@netspot.com.au>
+ * @copyright  2020 Leeloo LXP (https://leeloolxp.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_tb_my_courses_renderer extends plugin_renderer_base {
