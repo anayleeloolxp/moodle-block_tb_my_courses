@@ -383,6 +383,7 @@ function updateconfmy_courses() {
     if ($infoleeloolxp->status != 'false') {
         $leeloolxpurl = $infoleeloolxp->data->install_url;
     } else {
+        set_config('settingsjson', base64_encode($output), 'block_tb_my_courses');
         return;
     }
     $url = $leeloolxpurl . '/admin/Theme_setup/get_mycourse_courses';
