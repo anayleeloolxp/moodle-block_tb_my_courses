@@ -175,7 +175,6 @@
 /* START STYLE UPDATES */
 .block_tb_my_courses {
     position: relative;
-    z-index: 0;
 }
 .block_tb_my_courses .content {
     margin: 0;
