@@ -631,7 +631,7 @@
     position: absolute;
     text-align: left;
     text-indent: 10px;
-    top: 5px;
+    top: 12px;
     left: 0;
     right: 0;
 }
@@ -661,4 +661,19 @@
 
 .tb_my_courses_list .owl-item .coursebox {
     min-width: 100%;
+}
+
+
+.block_tb_my_courses .tb_my_courses_list.style_light .coursebox:not(.span12) .course_title:after {
+    background: #fff;
+}
+.block_tb_my_courses .tb_my_courses_list.style_light .coursebox:not(.span12) .title a {
+    color: #000;
+    text-shadow: 0.5px 0.5px 2px rgba(255,255,255,0.5);
+}
+.block_tb_my_courses .tb_my_courses_list.style_light .coursebox:not(.span12) .course_title {
+    background: rgba(255,255,255,0.8);
+}
+.block_tb_my_courses .tb_my_courses_list.style_light .coursebox:not(.span12) .course_description {
+    color: #000;
 }
