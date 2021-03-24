@@ -53,8 +53,6 @@ class block_tb_my_courses_renderer extends plugin_renderer_base {
                 $this->page->requires->js(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/js/owlslider.js'));
             }
 
-            $this->page->requires->css(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/css/owl.carousel.min.css'));
-            $this->page->requires->css(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/css/owl.theme.default.min.css'));
         }
 
         $this->page->requires->js(new moodle_url($CFG->wwwroot . '/blocks/tb_my_courses/js/custom.js'));
